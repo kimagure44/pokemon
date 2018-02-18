@@ -1,7 +1,10 @@
 var store = new Vuex.Store({
     state: {
         title: null,
-        showMenu: false
+        showMenu: false,
+        subEndPoints: [],
+        endPoint: "https://pokeapi.co/api/v2/",
+        errors: null
     },
     mutations: {
         setTitle: function(state, title) {
@@ -11,6 +14,22 @@ var store = new Vuex.Store({
         setShowMenu: function(state, status) {
             debugger;
             state.showMenu = status;
+        },
+        setSubEndPoints: function(state, valor) {
+            state.subEndPoints.push(valor);
+        },
+        setErrors: function(state, valor) {
+            state.errors = valor;
+        },
+        resultSubEndPoint: function(state, api) {
+            debugger;
+            axios.get(api)
+                .then(function(response) {
+                    console.log(response);
+                })
+                .catch(function(e) {
+                    _this.$store.commit("setErrors", e);
+                });
         }
     },
     getters: {
@@ -21,17 +40,21 @@ var store = new Vuex.Store({
         getShowMenu: function(state) {
             debugger;
             return state.showMenu;
+        },
+        getEndPoint: function(state) {
+            return state.endPoint;
+        },
+        getErrors: function(state) {
+            return state.errors;
+        },
+        getSubEndPoints: function(state) {
+            return state.subEndPoints;
         }
     }
 });
 var app = new Vue({
     store,
     el: "main",
-    data: {
-        endPoint: "https://pokeapi.co/api/v2/",
-        subEndPoints: [],
-        errors: null
-    },
     mounted: function() {
         this.$store.commit("setTitle", "PÁGINA PRINCIPAL");
     },
@@ -44,27 +67,22 @@ var app = new Vue({
     },
     methods: {
         endpoints: function() {
+            debugger;
             var _this = this;
-            axios.get(_this.endPoint)
+            axios.get(this.$store.getters.getEndPoint)
                 .then(function(response) {
+                    debugger;
                     if (response.status === 200) {
                         for (index in response.data) {
-                            _this.subEndPoints.push(response.data[index]);
+                            _this.$store.commit("setSubEndPoints", response.data[index]);
                         }
                     }
                 })
                 .catch(function(e) {
-                    this.errors.push(e)
+                    debugger;
+                    _this.$store.commit("setErrors", e);
                 });
         },
-        call: function(api) {
-            axios.get(api)
-                .then(function(response) {
-                    console.log(response);
-                })
-                .catch(function(e) {
-                    this.errors.push(e)
-                });
-        }
+
     }
 })

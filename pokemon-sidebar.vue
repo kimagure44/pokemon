@@ -1,10 +1,9 @@
 <template>
     <div>
         <div v-bind:class="[{'menu':true, 'open':this.$store.getters.getShowMenu}]">
-            <ul>
-                <li>OP 1</li>
-                <li>OP 2</li>
-            </ul>
+            <div class="rest" v-for="b in this.$store.getters.getSubEndPoints">
+                <button v-text="b" v-on:click="query(b)"></button>
+            </div>
         </div>
     </div>
 </template>
@@ -12,26 +11,33 @@
     module.exports = {
         mounted: function() {
             debugger;
+        },
+        methods: {
+            query: function(valor) {
+                debugger;
+                this.$store.commit('resultSubEndPoint',valor)
+            }
         }
     };
 </script>
 <style scoped>
     .menu {
         width: 0px;
-        height: 100%;
+        height: calc(100% - 50px);
         z-index: 10;
         background: #007cff;
         color: #ffffff;
         position: fixed;
         left: 0;
-        top: 0;
+        top: 50px;
         box-shadow: 4px 0px 6px rgba(0,0,0,0.2);
-        transition: all 400ms ease-out;
-        overflow: hidden;
+        transition: all 200ms ease-out;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
     .open {
-        width: 370px;
-        transition: all 400ms ease-out;
+        width: 385px;
+        transition: all 200ms ease-out;
     }
     ul {
         list-style: none;
