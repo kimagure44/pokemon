@@ -8,11 +8,9 @@ var store = new Vuex.Store({
     },
     mutations: {
         setTitle: function(state, title) {
-            debugger;
             state.title = title;
         },
         setShowMenu: function(state, status) {
-            debugger;
             state.showMenu = status;
         },
         setSubEndPoints: function(state, valor) {
@@ -22,7 +20,6 @@ var store = new Vuex.Store({
             state.errors = valor;
         },
         resultSubEndPoint: function(state, api) {
-            debugger;
             axios.get(api)
                 .then(function(response) {
                     console.log(response);
@@ -34,11 +31,9 @@ var store = new Vuex.Store({
     },
     getters: {
         getTitle: function(state) {
-            debugger;
             return state.title;
         },
         getShowMenu: function(state) {
-            debugger;
             return state.showMenu;
         },
         getEndPoint: function(state) {
@@ -63,15 +58,14 @@ var app = new Vue({
     },
     components: {
         "pokemon-header": httpVueLoader("pokemon-header.vue"),
-        "pokemon-sidebar": httpVueLoader("pokemon-sidebar.vue")
+        "pokemon-sidebar": httpVueLoader("pokemon-sidebar.vue"),
+        "pokemon-container": httpVueLoader("pokemon-container.vue")
     },
     methods: {
         endpoints: function() {
-            debugger;
             var _this = this;
             axios.get(this.$store.getters.getEndPoint)
                 .then(function(response) {
-                    debugger;
                     if (response.status === 200) {
                         for (index in response.data) {
                             _this.$store.commit("setSubEndPoints", response.data[index]);
@@ -79,7 +73,6 @@ var app = new Vue({
                     }
                 })
                 .catch(function(e) {
-                    debugger;
                     _this.$store.commit("setErrors", e);
                 });
         },

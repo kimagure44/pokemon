@@ -10,11 +10,9 @@
 <script>
     module.exports = {
         mounted: function() {
-            debugger;
         },
         methods: {
             query: function(valor) {
-                debugger;
                 this.$store.commit('resultSubEndPoint',valor)
             }
         }

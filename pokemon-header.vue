@@ -17,12 +17,10 @@
         },
         methods: {
             show: function() {
-                debugger;
-                if (!this.$store.getters.getShowMenu) {
+                if (!this.$store.getters.getShowMenu)
                     this.$store.commit("setShowMenu", true);
-                } else {
+                else
                     this.$store.commit("setShowMenu", false);
-                }
             }
         }
     };
