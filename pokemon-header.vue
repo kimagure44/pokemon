@@ -1,12 +1,10 @@
 <template>
-    <div>
-        <nav>
-            <ul>
-                <li v-on:click="show()"><i class="fas fa-bars"></i></li>
-                <li v-text="this.$store.getters.getTitle"></li>
-            </ul>
-        </nav>
-    </div>
+    <nav>
+        <ul>
+            <li v-on:click="show()"><i class="fas fa-bars"></i></li>
+            <li v-text="this.$store.getters.getTitle"></li>
+        </ul>
+    </nav>
 </template>
 <script>
     module.exports = {

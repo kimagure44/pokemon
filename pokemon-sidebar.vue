@@ -1,9 +1,7 @@
 <template>
-    <div>
-        <div v-bind:class="[{'menu':true, 'open':this.$store.getters.getShowMenu}]">
-            <div class="rest" v-for="b in this.$store.getters.getSubEndPoints">
-                <button v-text="b" v-on:click="query(b)"></button>
-            </div>
+    <div v-bind:class="[{'menu':true, 'open':this.$store.getters.getShowMenu}]">
+        <div class="rest" v-for="b in this.$store.getters.getSubEndPoints">
+            <button v-on:click="query(b.url)">{{b.nombre}}</button>
         </div>
     </div>
 </template>
@@ -13,7 +11,9 @@
         },
         methods: {
             query: function(valor) {
-                this.$store.commit('resultSubEndPoint',valor)
+                this.$store.commit("setShowModal", false);
+                this.$store.commit("setShowLoading", true);
+                this.$store.commit('resultSubEndPoint',valor);
             }
         }
     };
@@ -34,7 +34,7 @@
         overflow-y: auto;
     }
     .open {
-        width: 385px;
+        width: 235px;
         transition: all 200ms ease-out;
     }
     ul {

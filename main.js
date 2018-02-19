@@ -4,7 +4,10 @@ var store = new Vuex.Store({
         showMenu: false,
         subEndPoints: [],
         endPoint: "https://pokeapi.co/api/v2/",
-        errors: null
+        errors: null,
+        showModal: false,
+        showLoading: false,
+        registroPokemon: []
     },
     mutations: {
         setTitle: function(state, title) {
@@ -19,17 +22,44 @@ var store = new Vuex.Store({
         setErrors: function(state, valor) {
             state.errors = valor;
         },
+        setRegistroPokemon: function(state, valor) {
+            state.registroPokemon.push(valor);
+        },
         resultSubEndPoint: function(state, api) {
+            var _this = this;
             axios.get(api)
                 .then(function(response) {
-                    console.log(response);
+                    debugger;
+                    if (response.status === 200) {
+                        _this.commit("setShowLoading", true);
+                        _this.commit("setRegistroPokemon", { "count": response.data.count, "prev": response.data.previous, "next": response.data.next, "results": response.data.results })
+                        _this.commit("setShowLoading", false);
+                    }
                 })
                 .catch(function(e) {
-                    _this.$store.commit("setErrors", e);
+                    debugger;
+                    _this.commit("setShowLoading", true);
+                    _this.commit("setErrors", e);
+                    _this.commit("setShowModal", true);
                 });
+        },
+        setShowModal: function(state, status) {
+            if (status) {
+                this.commit("setShowLoading", false);
+            }
+            state.showModal = status;
+        },
+        setShowLoading: function(state, status) {
+            state.showLoading = status;
         }
     },
     getters: {
+        getRegistroPokemon: function(state) {
+            return state.registroPokemon;
+        },
+        getShowLoading: function(state) {
+            return state.showLoading;
+        },
         getTitle: function(state) {
             return state.title;
         },
@@ -44,6 +74,9 @@ var store = new Vuex.Store({
         },
         getSubEndPoints: function(state) {
             return state.subEndPoints;
+        },
+        getShowModal: function(state) {
+            return state.showModal;
         }
     }
 });
@@ -59,21 +92,29 @@ var app = new Vue({
     components: {
         "pokemon-header": httpVueLoader("pokemon-header.vue"),
         "pokemon-sidebar": httpVueLoader("pokemon-sidebar.vue"),
-        "pokemon-container": httpVueLoader("pokemon-container.vue")
+        "pokemon-container": httpVueLoader("pokemon-container.vue"),
+        "pokemon-modal": httpVueLoader("pokemon-modal.vue"),
+        "pokemon-loading": httpVueLoader("pokemon-loading.vue")
     },
     methods: {
         endpoints: function() {
             var _this = this;
+            _this.$store.commit("setShowLoading", true);
             axios.get(this.$store.getters.getEndPoint)
                 .then(function(response) {
+                    debugger;
                     if (response.status === 200) {
                         for (index in response.data) {
-                            _this.$store.commit("setSubEndPoints", response.data[index]);
+                            _this.$store.commit("setSubEndPoints", { "nombre": index, "url": response.data[index] });
                         }
+                        _this.$store.commit("setShowLoading", false);
                     }
                 })
                 .catch(function(e) {
+                    debugger;
+                    _this.$store.commit("setShowLoading", false);
                     _this.$store.commit("setErrors", e);
+                    _this.$store.commit("setShowModal", true);
                 });
         },
 
